@@ -1,0 +1,24 @@
+# Dự án mẫu tham khảo, không đẩy lên git
+exp/
+
+# Thư viện cài đặt (npm install / pip install)
+node_modules/
+.venv/
+__pycache__/
+
+# File sinh ra khi build / biên dịch
+dist/
+smart-contract/artifacts/
+smart-contract/cache/
+smart-contract/typechain-types/
+smart-contract/coverage/
+
+# File khoá tạm của Word / Office khi đang mở tài liệu
+~$*
+
+# Bí mật & log
+.env
+.env.local
+*.log
+.vscode/
+.DS_Store

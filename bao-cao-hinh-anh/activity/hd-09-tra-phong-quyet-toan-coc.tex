@@ -1,0 +1,50 @@
+\documentclass[11pt,border=6pt]{standalone}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,shapes.geometric,calc}
+\tikzset{
+  act/.style={rectangle,rounded corners=6pt,draw,thick,fill=blue!4,align=center,font=\small,minimum height=0.8cm,inner sep=3pt},
+  dec/.style={diamond,aspect=2,draw,thick,fill=yellow!8,align=center,font=\footnotesize,inner sep=0.5pt},
+  mrg/.style={diamond,draw,thick,fill=white,minimum size=0.6cm,inner sep=0pt},
+  st/.style={circle,fill=black,minimum size=0.42cm,inner sep=0pt},
+  en/.style={circle,draw,thick,minimum size=0.5cm,inner sep=0pt,path picture={\fill[black] (path picture bounding box.center) circle (0.14);}},
+  arr/.style={thick,-{Stealth[length=2.4mm]}},
+  lbl/.style={font=\footnotesize,inner sep=1.5pt,fill=white},
+}
+\begin{document}
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+\begin{tikzpicture}
+
+\draw[thick] (0,1.7000000000000002) rectangle (16.0,-21.24);
+\draw[thick] (0,0.9) -- (16.0,0.9);
+\node[font=\bfseries\small,align=center] at (3.2,1.3) {Chủ nhà};
+\node[font=\bfseries\small,align=center] at (11.2,1.3) {Hệ thống};
+\draw[thick] (6.4,1.7000000000000002) -- (6.4,-21.24);
+\node[st] (s) at (3.20,0.00) {};
+\node[act,text width=4.40cm] (a1) at (3.20,-1.80) {Mở hợp đồng của phòng};
+\node[dec,text width=2.09cm] (d1) at (9.50,-4.14) {Hết hạn hoặc\\khách nợ > 1 kỳ?};
+\node[act,text width=3.19cm] (ax) at (13.95,-4.14) {Thông báo chưa\\được kết thúc};
+\node[act,text width=4.84cm] (a2) at (3.20,-6.84) {Kiểm tra THIETBI trong phòng,\\nhập số tiền khấu trừ và lý do};
+\node[act,text width=5.28cm] (b1) at (9.50,-9.00) {Smart contract kiểm tra khấu trừ ≤ tiền cọc,\\có lý do khi khấu trừ};
+\node[dec,text width=1.21cm] (d2) at (9.50,-11.52) {Hợp lệ?};
+\node[act,text width=3.19cm] (ay) at (13.95,-11.52) {Hiển thị lý do\\bị từ chối};
+\node[act,text width=5.28cm] (b2) at (9.50,-14.04) {Hoàn phần cọc còn lại cho người thuê,\\khấu trừ cho chủ nhà; hợp đồng “Đã kết thúc”};
+\node[act,text width=5.28cm] (b3) at (9.50,-16.38) {Backend đồng bộ LeaseEnded: phòng về\\“Trống”, ghi khoản khấu trừ vào thu chi};
+\node[mrg] (mf) at (11.20,-18.54) {};
+\node[en] (e) at (11.20,-20.16) {};
+\draw[arr] (s) -- (a1);
+\draw[arr] (a1) -| (d1);
+\draw[arr] (d1) -- node[lbl,pos=0.5,above] {[Không]} (ax);
+\draw[arr] (d1.west) -| node[lbl,pos=0,above left] {[Có]} (a2);
+\draw[arr] (a2) -| (b1);
+\draw[arr] (b1) -- (d2);
+\draw[arr] (d2) -- node[lbl,pos=0.45,right] {[Có]} (b2);
+\draw[arr] (d2) -- node[lbl,pos=0.5,above] {[Không]} (ay);
+\draw[arr] (b2) -- (b3);
+\draw[arr] (b3) |- (mf);
+\draw[arr] (ay) |- (mf);
+\draw[arr] (ax.east) -- ++(0.4,0) |- (mf.east);
+\draw[arr] (mf) -- (e);
+\end{tikzpicture}
+\end{document}

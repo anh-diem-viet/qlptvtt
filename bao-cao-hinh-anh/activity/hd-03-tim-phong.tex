@@ -1,0 +1,47 @@
+\documentclass[11pt,border=6pt]{standalone}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,shapes.geometric,calc}
+\tikzset{
+  act/.style={rectangle,rounded corners=6pt,draw,thick,fill=blue!4,align=center,font=\small,minimum height=0.8cm,inner sep=3pt},
+  dec/.style={diamond,aspect=2,draw,thick,fill=yellow!8,align=center,font=\footnotesize,inner sep=0.5pt},
+  mrg/.style={diamond,draw,thick,fill=white,minimum size=0.6cm,inner sep=0pt},
+  st/.style={circle,fill=black,minimum size=0.42cm,inner sep=0pt},
+  en/.style={circle,draw,thick,minimum size=0.5cm,inner sep=0pt,path picture={\fill[black] (path picture bounding box.center) circle (0.14);}},
+  arr/.style={thick,-{Stealth[length=2.4mm]}},
+  lbl/.style={font=\footnotesize,inner sep=1.5pt,fill=white},
+}
+\begin{document}
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+\begin{tikzpicture}
+
+\draw[thick] (0,1.7000000000000002) rectangle (16.0,-19.98);
+\draw[thick] (0,0.9) -- (16.0,0.9);
+\node[font=\bfseries\small,align=center] at (3.2,1.3) {Người thuê};
+\node[font=\bfseries\small,align=center] at (11.2,1.3) {Hệ thống};
+\draw[thick] (6.4,1.7000000000000002) -- (6.4,-19.98);
+\node[st] (s) at (3.20,0.00) {};
+\node[act,text width=4.40cm] (a1) at (3.20,-1.80) {Mở trang “Tìm phòng”};
+\node[act,text width=5.28cm] (b1) at (9.50,-3.60) {Lấy các phòng không có hợp đồng chờ ký\\hoặc đang thuê, kèm giá, cọc, thiết bị};
+\node[act,text width=4.40cm] (a2) at (3.20,-5.76) {Lọc theo giá / từ khoá,\\chọn phòng phù hợp};
+\node[act,text width=4.84cm] (a3) at (3.20,-7.92) {Nhập lời nhắn (lịch xem phòng,\\số người ở), bấm “Gửi yêu cầu thuê”};
+\node[dec,text width=1.43cm] (d1) at (9.50,-10.26) {Yêu cầu\\hợp lệ?};
+\node[act,text width=5.28cm] (b2) at (9.50,-12.78) {Lưu yêu cầu thuê trạng thái “Chờ chủ nhà\\phản hồi”, hiện ở trang Phòng của chủ nhà};
+\node[act,text width=3.19cm] (ax) at (13.95,-12.78) {Hiển thị\\thông báo lỗi};
+\node[act,text width=4.40cm] (a4) at (3.20,-15.12) {Hẹn chủ nhà xem phòng\\và thoả thuận};
+\node[mrg] (mf) at (11.20,-17.28) {};
+\node[en] (e) at (11.20,-18.90) {};
+\draw[arr] (s) -- (a1);
+\draw[arr] (a1) -| (b1);
+\draw[arr] (b1) -| (a2);
+\draw[arr] (a2) -- (a3);
+\draw[arr] (a3) -| (d1);
+\draw[arr] (d1) -- node[lbl,pos=0.45,right] {[Có]} (b2);
+\draw[arr] (d1.east) -| node[lbl,pos=0,above right] {[Không]} (ax);
+\draw[arr] (b2) -| (a4);
+\draw[arr] (a4) |- (mf);
+\draw[arr] (ax) |- (mf);
+\draw[arr] (mf) -- (e);
+\end{tikzpicture}
+\end{document}

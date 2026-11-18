@@ -1,0 +1,56 @@
+\documentclass[border=8pt]{standalone}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Heros}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart,calc}
+\tikzset{
+  cls/.style={rectangle split,rectangle split parts=3,draw,semithick,anchor=north,text width=6.1cm,font=\small,
+              rectangle split part fill={white,white,white},inner sep=3pt},
+  chain/.style={cls,rectangle split part fill={blue!7,white,white}},
+  as/.style={semithick},
+  m/.style={font=\footnotesize,inner sep=1pt},
+}
+\begin{document}
+\begin{tikzpicture}
+
+\node[cls] (User) at (0.0,0) {\centering \textbf{User}\nodepart{two}\raggedright - id: Integer\\ - googleId: String\\ - email: String\\ - name: String\\ - nickname: String\\ - walletAddress: String\\ - createdAt: DateTime\nodepart{three}\raggedright + loginWithGoogle(): Session\\ + setNickname(): User\\ + linkWallet(): User\\ + logout(): void};
+\node[cls] (Session) at ($(User.south)+(0,-1.0)$) {\centering \textbf{Session}\nodepart{two}\raggedright - token: String\\ - userId: Integer\\ - expiresAt: Long\nodepart{three}\raggedright + create(): String\\ + revoke(): void};
+\node[cls] (CashEntry) at ($(Session.south)+(0,-1.0)$) {\centering \textbf{CashEntry}\nodepart{two}\raggedright - id: Integer\\ - ownerId: Integer\\ - entryDate: Date\\ - type: Thu\textbar{}Chi\\ - category: String\\ - amountWei: Decimal\\ - note: String\nodepart{three}\raggedright + getCashflow(month): List\\ + addEntry(): void};
+\node[cls] (RoomRequest) at (7.6,0) {\centering \textbf{RoomRequest}\nodepart{two}\raggedright - id: Integer\\ - roomId: Integer\\ - userId: Integer\\ - message: String\\ - status: RequestStatus\\ - createdAt: DateTime\nodepart{three}\raggedright + send(roomId, message): void\\ + reject(): void\\ + withdraw(): void};
+\node[cls] (Room) at ($(RoomRequest.south)+(0,-1.0)$) {\centering \textbf{Room}\nodepart{two}\raggedright - id: Integer\\ - ownerId: Integer\\ - code: String\\ - name: String\\ - floor: Integer\\ - area: Decimal\\ - priceWei: Decimal\\ - depositWei: Decimal\\ - leaseId: Integer\nodepart{three}\raggedright + listRooms(): List\textless{}Room\textgreater{}\\ + create(): Room\\ + update(): Room\\ + linkLease(leaseId): void\\ + status(): Trống\textbar{}Chờ ký\textbar{}Đã thuê};
+\node[cls] (Equipment) at ($(Room.south)+(0,-1.0)$) {\centering \textbf{Equipment}\nodepart{two}\raggedright - id: Integer\\ - roomId: Integer\\ - name: String\\ - state: Tốt\textbar{}Cần sửa\textbar{}Hỏng\\ - note: String\nodepart{three}\raggedright + add(): void\\ + updateState(): void};
+\node[cls] (Tenant) at (15.2,0) {\centering \textbf{Tenant}\nodepart{two}\raggedright - id: Integer\\ - code: String\\ - fullName: String\\ - idNumber: String\\ - phone: String\\ - email: String\\ - hometown: String\\ - roomId: Integer\\ - walletAddress: String\\ - peopleCount: Integer\nodepart{three}\raggedright + create(): Tenant\\ + update(): Tenant\\ + delete(): void};
+\node[chain] (Lease) at ($(Tenant.south)+(0,-1.0)$) {\centering \textbf{Lease}\\ \footnotesize«smart contract»\nodepart{two}\raggedright - leaseId: Uint256\\ - landlord: Address\\ - tenant: Address\\ - rent: Uint256\\ - deposit: Uint256\\ - periodLength: Uint64\\ - totalPeriods: Uint32\\ - paidPeriods: Uint32\\ - startDate: Uint64\\ - status: Status\\ - extensionPeriods: Uint32\\ - depositDeducted: Uint256\nodepart{three}\raggedright + createLease(): Uint256\\ + signLease(id): void\\ + payRent(id, n): void\\ + proposeExtension(id, n): void\\ + acceptExtension(id): void\\ + endLease(id, deduction, note): void\\ + terminateEarly(id): void\\ + claimDeposit(id): void};
+\node[chain] (Bill) at ($(Lease.south)+(0,-1.0)$) {\centering \textbf{Bill}\\ \footnotesize«smart contract»\nodepart{two}\raggedright - billId: Uint256\\ - leaseId: Uint256\\ - rentPeriods: Uint32\\ - rentAmount: Uint256\\ - amount: Uint256\\ - memo: String\\ - paid: Bool\\ - cancelled: Bool\nodepart{three}\raggedright + issueBill(id, kỳ, dịch vụ, memo): Uint256\\ + payBill(billId): void\\ + cancelBill(billId): void};
+\node[cls] (Service) at (22.8,0) {\centering \textbf{Service}\nodepart{two}\raggedright - id: Integer\\ - name: String\\ - unit: String\\ - unitPriceWei: Decimal\\ - kind: Metered\textbar{}Fixed\nodepart{three}\raggedright + listServices(): List\\ + update(): void};
+\node[cls] (ServiceUsage) at ($(Service.south)+(0,-1.0)$) {\centering \textbf{ServiceUsage}\nodepart{two}\raggedright - id: Integer\\ - roomId: Integer\\ - serviceId: Integer\\ - month: String\\ - oldIndex: Integer\\ - newIndex: Integer\nodepart{three}\raggedright + saveUsage(): void\\ + usage(): Integer};
+\node[cls] (Invoice) at ($(ServiceUsage.south)+(0,-1.0)$) {\centering \textbf{Invoice}\nodepart{two}\raggedright - id: Integer\\ - roomId: Integer\\ - leaseId: Integer\\ - month: String\\ - rentWei: Decimal\\ - serviceTotalWei: Decimal\\ - totalWei: Decimal\\ - billId: Integer\nodepart{three}\raggedright + generate(month): List\textless{}Invoice\textgreater{}\\ + linkBill(billId): void\\ + status(): InvoiceStatus};
+\node[cls] (Payment) at ($(Invoice.south)+(0,-1.0)$) {\centering \textbf{Payment}\nodepart{two}\raggedright - id: Integer\\ - invoiceId: Integer\\ - paidAt: DateTime\\ - amountWei: Decimal\\ - method: Blockchain\textbar{}Tiền mặt\textbar{}Chuyển khoản\\ - txHash: String\nodepart{three}\raggedright + recordFromChain(): void\\ + addManual(): void};
+\draw[as] (User.south) -- node[m,pos=0.15,right]{1} node[m,pos=0.85,right]{0..n} (Session.north);
+\draw[as] (User.west) -| (-3.70,0 |- CashEntry.west) -- (CashEntry.west);
+\node[m,anchor=south east] at ($(CashEntry.west)+(-0.08,0.02)$) {0..n};
+\node[m,anchor=south east] at ($(User.west)+(-0.08,0.02)$) {1};
+\draw[as] (User.east) -| (3.80,0 |- RoomRequest.west) -- (RoomRequest.west);
+\node[m,anchor=south east] at ($(RoomRequest.west)+(-0.08,0.02)$) {0..n};
+\node[m,anchor=south west] at ($(User.east)+(0.08,0.02)$) {1};
+\draw[as] (User.east) -| (3.80,0 |- Room.west) -- (Room.west);
+\node[m,anchor=south east] at ($(Room.west)+(-0.08,0.02)$) {0..n};
+\draw[as] (RoomRequest.south) -- node[m,pos=0.15,right]{0..n} node[m,pos=0.85,right]{1} (Room.north);
+\draw[as] (Room.south) -- node[m,pos=0.15,right]{1} node[m,pos=0.85,right]{0..n} (Equipment.north);
+\draw[as] (Room.east) -| (11.40,0 |- Tenant.west) -- (Tenant.west);
+\node[m,anchor=south east] at ($(Tenant.west)+(-0.08,0.02)$) {0..n};
+\node[m,anchor=south west] at ($(Room.east)+(0.08,0.02)$) {1};
+\draw[as] (Room.east) -| (11.40,0 |- Lease.west) -- (Lease.west);
+\node[m,anchor=south east] at ($(Lease.west)+(-0.08,0.02)$) {0..n};
+\draw[as] (Tenant.south) -- node[m,pos=0.15,right]{1} node[m,pos=0.85,right]{0..n} (Lease.north);
+\draw[as] (Lease.south) -- node[m,pos=0.15,right]{1} node[m,pos=0.85,right]{0..n} (Bill.north);
+\draw[as] (Service.south) -- node[m,pos=0.15,right]{1} node[m,pos=0.85,right]{0..n} (ServiceUsage.north);
+\draw[as] (ServiceUsage.south) -- node[m,pos=0.15,right]{0..n} node[m,pos=0.85,right]{1} (Invoice.north);
+\draw[as] (Invoice.south) -- node[m,pos=0.15,right]{1} node[m,pos=0.85,right]{0..n} (Payment.north);
+\draw[as] (Lease.east) -| (19.00,0 |- Invoice.west) -- (Invoice.west);
+\node[m,anchor=south east] at ($(Invoice.west)+(-0.08,0.02)$) {0..n};
+\node[m,anchor=south west] at ($(Lease.east)+(0.08,0.02)$) {1};
+\draw[as] (Bill.east) -| (19.00,0 |- Invoice.west) -- (Invoice.west);
+\node[m,anchor=south west] at ($(Bill.east)+(0.08,0.02)$) {0..1};
+\end{tikzpicture}
+\end{document}
