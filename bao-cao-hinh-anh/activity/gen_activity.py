@@ -97,10 +97,13 @@ def bypass(a, b, label, d=1.0, side="east"):
 
 # ---------------- Biểu đồ hoạt động: Quản lý nhà trọ & thanh toán tiền thuê ----------------
 # Làn người dùng chỉ chứa thao tác của người dùng; làn Hệ thống gồm web, backend, MySQL và smart contract.
-USR, SYS = ("Người dùng", 6.4), ("Hệ thống", 9.6)
+USR, SYS = ("Người dùng", 6.4), ("Hệ thống", 10.2)
 LL, TT = ("Chủ nhà", 6.4), ("Người thuê", 6.4)
-M, R = -1.7, 2.75   # cột chính / cột phụ trong làn Hệ thống
-WM, WR = 4.8, 2.9   # độ rộng chữ của ô ở cột chính / cột phụ
+# Cột chính / cột phụ trong làn Hệ thống (lệch so với tâm làn). Ô chính cách mép trái làn ~0.35cm,
+# hai cột cách nhau ~0.45cm, bên phải ô phụ còn ~0.6cm cho đường vòng (BY) mà không chạm viền khung.
+M, R = -2.0, 2.85
+WM, WR = 4.8, 2.8   # độ rộng chữ của ô ở cột chính / cột phụ
+BY = 0.3            # đường vòng ra bên phải ô phụ (cm)
 
 # 1. Đăng nhập bằng Google
 build("hd-01-dang-nhap", [USR, SYS], [
@@ -200,7 +203,7 @@ build("hd-05-ky-hop-dong", [TT, SYS], [
 ], [
     ("s", "a1"), ("a1", "b1", None, "-|"), ("b1", "d0", None, "-|"), ("d0", "a2", "Có"), ("d0", "ar", "Không"),
     ("a2", "b2", None, "-|"), ("b2", "d1"), ("d1", "b3", "Có"), ("d1", "ax", "Không", "-|"), ("b3", "b4"),
-    ("b4", "mf", None, "|-"), ("ax", "mf", None, "|-"), ("ar", "mf", None, "RAW:\\draw[arr] (ar.east) -- ++(0.5,0) |- (mf.east);"), ("mf", "e"),
+    ("b4", "mf", None, "|-"), ("ax", "mf", None, "|-"), ("ar", "mf", None, "RAW:\\draw[arr] (ar.east) -- ++(" + str(BY) + ",0) |- (mf.east);"), ("mf", "e"),
 ])
 
 # 6. Ghi chỉ số điện nước & tạo hoá đơn tháng
@@ -221,24 +224,24 @@ build("hd-06-chi-so-hoa-don", [LL, SYS], [
 ], [
     ("s", "a1"), ("a1", "b1", None, "-|"), ("b1", "a2", None, "-|"), ("a2", "d1", None, "-|"),
     ("d1", "b2", "Có"), ("d1", "ax", "Không"), ("b2", "a3", None, "-|"), ("a3", "b3", None, "-|"), ("b3", "b4"), ("b4", "b5"),
-    ("b5", "mf", None, "|-"), ("ax", "mf", None, "RAW:\\draw[arr] (ax.east) -- ++(0.4,0) |- (mf.east);"), ("mf", "e"),
+    ("b5", "mf", None, "|-"), ("ax", "mf", None, "RAW:\\draw[arr] (ax.east) -- ++(" + str(BY) + ",0) |- (mf.east);"), ("mf", "e"),
 ])
 
 # 7. Xuất hoá đơn & thanh toán trên blockchain
-L3 = [("Chủ nhà", 5.2), ("Người thuê", 5.2), ("Hệ thống", 9.6)]
+L3 = [("Chủ nhà", 5.2), ("Người thuê", 5.2), SYS]
 build("hd-07-xuat-thanh-toan-hoa-don", L3, [
     ("s", "st", 0, 0, 0, "", None),
     ("a1", "act", 0, 0, 1, "Bấm “Xuất” hoá đơn,\\\\xác nhận trên MetaMask", 3.6),
-    ("b1", "act", 2, M + 0.3, 2.1, "Smart contract issueBill(kỳ tiền phòng,\\\\tiền dịch vụ) — phát BillIssued", WM),
-    ("b2", "act", 2, M + 0.3, 3.5, "Backend kiểm tra hoá đơn trên chain khớp\\\\số tiền, gắn mã; trạng thái “Chờ thanh toán”", WM),
+    ("b1", "act", 2, M, 2.1, "Smart contract issueBill(kỳ tiền phòng,\\\\tiền dịch vụ) — phát BillIssued", WM),
+    ("b2", "act", 2, M, 3.5, "Backend kiểm tra hoá đơn trên chain khớp\\\\số tiền, gắn mã; trạng thái “Chờ thanh toán”", WM),
     ("t1", "act", 1, 0, 5.0, "Mở “Hoá đơn của tôi”, xem\\\\chi tiết, bấm “Thanh toán”", 3.6),
-    ("b3", "act", 2, M + 0.3, 6.3, "Smart contract kiểm tra đúng người thuê,\\\\đúng số tiền, chưa trả, chưa huỷ", WM),
-    ("d1", "dec", 2, M + 0.3, 7.6, "Hợp lệ?", 1.1),
-    ("b4", "act", 2, M + 0.3, 8.9, "Cộng tiền vào số dư chủ nhà, cộng kỳ tiền\\\\phòng vào hợp đồng, phát BillPaid", WM),
-    ("ax", "act", 2, R, 8.9, "Hiển thị lý do\\\\bị từ chối", 2.6),
-    ("b5", "act", 2, M + 0.3, 10.4, "Backend ghi PHIEUTHANHTOAN (Blockchain),\\\\hoá đơn “Đã thu đủ”, cập nhật doanh thu", WM),
-    ("mf", "mrg", 2, 0.3, 11.7, "", None),
-    ("e", "en", 2, 0.3, 12.6, "", None),
+    ("b3", "act", 2, M, 6.3, "Smart contract kiểm tra đúng người thuê,\\\\đúng số tiền, chưa trả, chưa huỷ", WM),
+    ("d1", "dec", 2, M, 7.6, "Hợp lệ?", 1.1),
+    ("b4", "act", 2, M, 8.9, "Cộng tiền vào số dư chủ nhà, cộng kỳ tiền\\\\phòng vào hợp đồng, phát BillPaid", WM),
+    ("ax", "act", 2, R, 8.9, "Hiển thị lý do\\\\bị từ chối", WR),
+    ("b5", "act", 2, M, 10.4, "Backend ghi PHIEUTHANHTOAN (Blockchain),\\\\hoá đơn “Đã thu đủ”, cập nhật doanh thu", WM),
+    ("mf", "mrg", 2, 0, 11.7, "", None),
+    ("e", "en", 2, 0, 12.6, "", None),
 ], [
     ("s", "a1"), ("a1", "b1", None, "-|"), ("b1", "b2"), ("b2", "t1", None, "-|"), ("t1", "b3", None, "-|"),
     ("b3", "d1"), ("d1", "b4", "Có"), ("d1", "ax", "Không", "-|"), ("b4", "b5"),
@@ -246,16 +249,16 @@ build("hd-07-xuat-thanh-toan-hoa-don", L3, [
 ])
 
 # 8. Gia hạn hợp đồng (cần cả hai bên đồng ý)
-build("hd-08-gia-han", [("Bên đề xuất", 5.2), ("Bên còn lại", 5.2), ("Hệ thống", 9.6)], [
+build("hd-08-gia-han", [("Bên đề xuất", 5.2), ("Bên còn lại", 5.2), SYS], [
     ("s", "st", 0, 0, 0, "", None),
     ("a1", "act", 0, 0, 1, "Nhập số kỳ gia hạn, bấm\\\\“Đề xuất gia hạn”", 3.6),
-    ("b1", "act", 2, M + 0.3, 2.1, "Smart contract kiểm tra hợp đồng đang thuê,\\\\chưa hết hạn, tổng số kỳ ≤ 240", WM),
-    ("b2", "act", 2, M + 0.3, 3.4, "Lưu đề xuất (số kỳ, bên đề xuất),\\\\phát ExtensionProposed", WM),
+    ("b1", "act", 2, M, 2.1, "Smart contract kiểm tra hợp đồng đang thuê,\\\\chưa hết hạn, tổng số kỳ ≤ 240", WM),
+    ("b2", "act", 2, M, 3.4, "Lưu đề xuất (số kỳ, bên đề xuất),\\\\phát ExtensionProposed", WM),
     ("d0", "dec", 1, 0, 4.8, "Đồng ý?", 1.1),
-    ("b3", "act", 2, M + 0.3, 4.8, "acceptExtension: cộng số kỳ, kéo dài\\\\ngày hết hạn, phát LeaseExtended", WM),
-    ("b4", "act", 2, R, 6.4, "cancelExtension:\\\\xoá đề xuất", 2.6),
-    ("mf", "mrg", 2, 0.3, 7.6, "", None),
-    ("e", "en", 2, 0.3, 8.5, "", None),
+    ("b3", "act", 2, M, 4.8, "acceptExtension: cộng số kỳ, kéo dài\\\\ngày hết hạn, phát LeaseExtended", WM),
+    ("b4", "act", 2, R, 6.4, "cancelExtension:\\\\xoá đề xuất", WR),
+    ("mf", "mrg", 2, 0, 7.6, "", None),
+    ("e", "en", 2, 0, 8.5, "", None),
 ], [
     ("s", "a1"), ("a1", "b1", None, "-|"), ("b1", "b2"), ("b2", "d0", None, "-|"),
     ("d0", "b3", "Có"), ("d0", "b4", "Không", "|-"),
@@ -267,7 +270,7 @@ build("hd-09-tra-phong-quyet-toan-coc", [LL, SYS], [
     ("s", "st", 0, 0, 0, "", None),
     ("a1", "act", 0, 0, 1, "Mở hợp đồng của phòng", 4.0),
     ("d1", "dec", 1, M, 2.3, "Hết hạn hoặc\\\\khách nợ > 1 kỳ?", 1.9),
-    ("ax", "act", 1, R, 2.3, "Thông báo chưa\\\\được kết thúc", WR),
+    ("ax", "act", 1, R, 3.6, "Thông báo chưa\\\\được kết thúc", WR),
     ("a2", "act", 0, 0, 3.8, "Kiểm tra THIETBI trong phòng,\\\\nhập số tiền khấu trừ và lý do", 4.4),
     ("b1", "act", 1, M, 5.0, "Smart contract kiểm tra khấu trừ ≤ tiền cọc,\\\\có lý do khi khấu trừ", WM),
     ("d2", "dec", 1, M, 6.4, "Hợp lệ?", 1.1),
@@ -277,10 +280,10 @@ build("hd-09-tra-phong-quyet-toan-coc", [LL, SYS], [
     ("mf", "mrg", 1, 0, 10.3, "", None),
     ("e", "en", 1, 0, 11.2, "", None),
 ], [
-    ("s", "a1"), ("a1", "d1", None, "-|"), ("d1", "ax", "Không"), ("d1", "a2", "Có", "-|"), ("a2", "b1", None, "-|"),
+    ("s", "a1"), ("a1", "d1", None, "-|"), ("d1", "ax", "Không", "-|"), ("d1", "a2", "Có", "-|"), ("a2", "b1", None, "-|"),
     ("b1", "d2"), ("d2", "b2", "Có"), ("d2", "ay", "Không"), ("b2", "b3"),
     ("b3", "mf", None, "|-"), ("ay", "mf", None, "|-"),
-    ("ax", "mf", None, "RAW:\\draw[arr] (ax.east) -- ++(0.4,0) |- (mf.east);"), ("mf", "e"),
+    ("ax", "mf", None, "RAW:\\draw[arr] (ax.east) -- ++(" + str(BY) + ",0) |- (mf.east);"), ("mf", "e"),
 ])
 
 # 10. Theo dõi tổng quan, công nợ và thu chi

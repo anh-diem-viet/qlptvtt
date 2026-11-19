@@ -16,10 +16,10 @@
 \hyphenpenalty=10000 \exhyphenpenalty=10000
 \begin{tikzpicture}
 
-\draw[thick] (0,1.7000000000000002) rectangle (16.0,-23.94);
-\draw[thick] (0,0.9) -- (16.0,0.9);
+\draw[thick] (0,1.7000000000000002) rectangle (16.6,-23.94);
+\draw[thick] (0,0.9) -- (16.6,0.9);
 \node[font=\bfseries\small,align=center] at (3.2,1.3) {Người dùng};
-\node[font=\bfseries\small,align=center] at (11.2,1.3) {Hệ thống};
+\node[font=\bfseries\small,align=center] at (11.5,1.3) {Hệ thống};
 \draw[thick] (6.4,1.7000000000000002) -- (6.4,-23.94);
 \node[st] (s) at (3.20,0.00) {};
 \node[act,text width=4.40cm] (a1) at (3.20,-1.80) {Bấm “Đăng nhập bằng Google”};
@@ -28,12 +28,12 @@
 \node[act,text width=5.28cm] (b2) at (9.50,-7.92) {Nhận code và state Google gửi về};
 \node[dec,text width=1.32cm] (d1) at (9.50,-10.08) {state\\hợp lệ?};
 \node[act,text width=5.28cm] (b3) at (9.50,-12.60) {Đổi code lấy ID token, lưu tài khoản,\\tạo phiên đăng nhập};
-\node[act,text width=3.19cm] (ax) at (13.95,-12.60) {Hiển thị\\thông báo lỗi};
+\node[act,text width=3.08cm] (ax) at (14.35,-12.60) {Hiển thị\\thông báo lỗi};
 \node[dec,text width=1.43cm] (d2) at (9.50,-15.12) {Đã có\\nickname?};
 \node[act,text width=4.40cm] (a3) at (3.20,-17.46) {Nhập nickname};
 \node[act,text width=5.28cm] (b4) at (9.50,-19.26) {Lưu nickname, mở trang Tổng quan};
-\node[mrg] (mf) at (11.20,-21.24) {};
-\node[en] (e) at (11.20,-22.86) {};
+\node[mrg] (mf) at (11.50,-21.24) {};
+\node[en] (e) at (11.50,-22.86) {};
 \draw[arr] (s) -- (a1);
 \draw[arr] (a1) -| (b1);
 \draw[arr] (b1) -| (a2);

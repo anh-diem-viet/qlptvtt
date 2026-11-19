@@ -16,24 +16,24 @@
 \hyphenpenalty=10000 \exhyphenpenalty=10000
 \begin{tikzpicture}
 
-\draw[thick] (0,1.7000000000000002) rectangle (16.0,-24.12);
-\draw[thick] (0,0.9) -- (16.0,0.9);
+\draw[thick] (0,1.7000000000000002) rectangle (16.6,-24.12);
+\draw[thick] (0,0.9) -- (16.6,0.9);
 \node[font=\bfseries\small,align=center] at (3.2,1.3) {Chủ nhà};
-\node[font=\bfseries\small,align=center] at (11.2,1.3) {Hệ thống};
+\node[font=\bfseries\small,align=center] at (11.5,1.3) {Hệ thống};
 \draw[thick] (6.4,1.7000000000000002) -- (6.4,-24.12);
 \node[st] (s) at (3.20,0.00) {};
 \node[act,text width=4.84cm] (a1) at (3.20,-1.80) {Mở “Chỉ số điện nước”, chọn tháng};
 \node[act,text width=5.28cm] (b1) at (9.50,-3.60) {Lấy chỉ số mới tháng trước làm chỉ số cũ\\tháng này cho từng phòng};
 \node[act,text width=4.84cm] (a2) at (3.20,-5.76) {Nhập chỉ số mới điện, nước};
 \node[dec,text width=1.43cm] (d1) at (9.50,-7.92) {Mới ≥ cũ?};
-\node[act,text width=3.19cm] (ax) at (13.95,-7.92) {Tô đỏ ô tiêu thụ,\\khoá nút Lưu};
+\node[act,text width=3.08cm] (ax) at (14.35,-7.92) {Tô đỏ ô tiêu thụ,\\khoá nút Lưu};
 \node[act,text width=5.28cm] (b2) at (9.50,-10.26) {Lưu SUDUNGDV (chỉ số cũ, mới)};
 \node[act,text width=4.84cm] (a3) at (3.20,-12.42) {Bấm “Tạo hoá đơn tháng”\\(hoặc hệ thống tự tạo đầu tháng)};
 \node[act,text width=5.28cm] (b3) at (9.50,-14.58) {Với mỗi phòng đang thuê đủ chỉ số: tính tiền\\điện, nước theo chỉ số × đơn giá};
 \node[act,text width=5.28cm] (b4) at (9.50,-16.92) {Cộng dịch vụ cố định (internet, rác, gửi xe)\\và 1 kỳ tiền phòng nếu hợp đồng còn kỳ};
 \node[act,text width=5.28cm] (b5) at (9.50,-19.26) {Lưu HOADON “Chưa phát hành”, báo các\\phòng bị bỏ qua (thiếu chỉ số…)};
-\node[mrg] (mf) at (11.20,-21.42) {};
-\node[en] (e) at (11.20,-23.04) {};
+\node[mrg] (mf) at (11.50,-21.42) {};
+\node[en] (e) at (11.50,-23.04) {};
 \draw[arr] (s) -- (a1);
 \draw[arr] (a1) -| (b1);
 \draw[arr] (b1) -| (a2);
@@ -45,7 +45,7 @@
 \draw[arr] (b3) -- (b4);
 \draw[arr] (b4) -- (b5);
 \draw[arr] (b5) |- (mf);
-\draw[arr] (ax.east) -- ++(0.4,0) |- (mf.east);
+\draw[arr] (ax.east) -- ++(0.3,0) |- (mf.east);
 \draw[arr] (mf) -- (e);
 \end{tikzpicture}
 \end{document}
